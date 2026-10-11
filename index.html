@@ -1724,9 +1724,95 @@ if (rsvpForm) {
     });
 }
 
+        
+    </script>
 
 
-const guestbookForm = document.getElementById("guestbookForm");
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL = "https://jxldnyoayvhxjwfkjens.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_qGHcuSmy3gsz4kKInkHdzw_wyJTSC08";
+
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    let invite = null;
+
+    console.log("Supabase connecté");
+// Récupérer l'URL originale après le passage par 404.html
+const savedPath = sessionStorage.getItem("redirectPath");
+
+if (savedPath) {
+    sessionStorage.removeItem("redirectPath");
+    history.replaceState({}, "", savedPath);
+}
+
+// Récupérer les informations de l'invité depuis l'URL
+const currentPath = window.location.pathname;
+
+const pathParts = currentPath
+    .split("/")
+    .filter(part => part !== "");
+
+console.log("URL de l'invitation :", currentPath);
+console.log("Éléments de l'URL :", pathParts);
+
+// Identifier l'invitation et l'invité depuis l'URL
+const invitationSlug = pathParts[1];
+const guestIdentifier = pathParts[2];
+
+console.log("Invitation :", invitationSlug);
+console.log("Invité :", guestIdentifier);
+
+// Séparer le nom de l'invité et son code
+const guestParts = guestIdentifier.split("-");
+
+const publicCode = guestParts.pop();
+const guestSlug = guestParts.join("-");
+
+console.log("Slug de l'invité :", guestSlug);
+console.log("Code de l'invité :", publicCode);
+
+// Récupérer les informations de l'invité depuis Supabase
+async function chargerInvite() {
+    const { data, error } = await supabaseClient.rpc(
+        "get_guest_invitation",
+        {
+            p_invitation_slug: invitationSlug,
+            p_guest_slug: guestSlug,
+            p_public_code: publicCode
+        }
+    );
+
+    if (error) {
+        console.error("Erreur lors de la récupération de l'invité :", error);
+        return;
+    }
+
+    console.log("Informations de l'invité :", data);
+    invite = data[0];
+
+if (invite) {
+    const nomInput = document.getElementById("nom");
+
+    if (nomInput) {
+        nomInput.value = invite.guest_name;
+        nomInput.readOnly = true;
+    }
+
+    console.log("Nom de l'invité chargé :", invite.guest_name);
+    console.log("Nombre de personnes autorisées :", invite.allowed_guests);
+}
+}
+
+chargerInvite();
+</script>
+
+<script>
+    const guestbookForm = document.getElementById("guestbookForm");
 
 if (guestbookForm) {
     guestbookForm.addEventListener("submit", async function(event) {
@@ -1816,93 +1902,6 @@ async function chargerMessagesLivreOr() {
 }
 
 chargerMessagesLivreOr();
-
-        
-    </script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-    const SUPABASE_URL = "https://jxldnyoayvhxjwfkjens.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_qGHcuSmy3gsz4kKInkHdzw_wyJTSC08";
-
-    const supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-    let invite = null;
-
-    console.log("Supabase connecté");
-// Récupérer l'URL originale après le passage par 404.html
-const savedPath = sessionStorage.getItem("redirectPath");
-
-if (savedPath) {
-    sessionStorage.removeItem("redirectPath");
-    history.replaceState({}, "", savedPath);
-}
-
-// Récupérer les informations de l'invité depuis l'URL
-const currentPath = window.location.pathname;
-
-const pathParts = currentPath
-    .split("/")
-    .filter(part => part !== "");
-
-console.log("URL de l'invitation :", currentPath);
-console.log("Éléments de l'URL :", pathParts);
-
-// Identifier l'invitation et l'invité depuis l'URL
-const invitationSlug = pathParts[1];
-const guestIdentifier = pathParts[2];
-
-console.log("Invitation :", invitationSlug);
-console.log("Invité :", guestIdentifier);
-
-// Séparer le nom de l'invité et son code
-const guestParts = guestIdentifier.split("-");
-
-const publicCode = guestParts.pop();
-const guestSlug = guestParts.join("-");
-
-console.log("Slug de l'invité :", guestSlug);
-console.log("Code de l'invité :", publicCode);
-
-// Récupérer les informations de l'invité depuis Supabase
-async function chargerInvite() {
-    const { data, error } = await supabaseClient.rpc(
-        "get_guest_invitation",
-        {
-            p_invitation_slug: invitationSlug,
-            p_guest_slug: guestSlug,
-            p_public_code: publicCode
-        }
-    );
-
-    if (error) {
-        console.error("Erreur lors de la récupération de l'invité :", error);
-        return;
-    }
-
-    console.log("Informations de l'invité :", data);
-    invite = data[0];
-
-if (invite) {
-    const nomInput = document.getElementById("nom");
-
-    if (nomInput) {
-        nomInput.value = invite.guest_name;
-        nomInput.readOnly = true;
-    }
-
-    console.log("Nom de l'invité chargé :", invite.guest_name);
-    console.log("Nombre de personnes autorisées :", invite.allowed_guests);
-}
-}
-
-chargerInvite();
-    
 </script>
 
 </body>
