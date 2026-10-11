@@ -1790,8 +1790,19 @@ if (invite) {
         nomInput.readOnly = true;
     }
 
-    console.log("Nom de l'invité chargé :", invite.guest_name);
-    console.log("Nombre de personnes autorisées :", invite.allowed_guests);
+   
+console.log("Nom de l'invité chargé :", invite.guest_name);
+
+const numeroTable = document.getElementById("numero-table");
+const blocTable = document.getElementById("bloc-table");
+
+if (invite.table_number && numeroTable && blocTable) {
+    numeroTable.textContent = invite.table_number;
+    blocTable.hidden = false;
+}
+
+console.log("Nombre de personnes autorisées :", invite.allowed_guests);
+
 }
 }
 
