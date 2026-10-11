@@ -1670,7 +1670,7 @@ if (rsvpForm) {
         p_public_code: publicCode,
         p_attendance: presence,
         p_guest_count: Number(nombre),
-        p_drink_choice: null
+        p_drink_choice: document.getElementById("boisson").value || null
     }
 );
 
