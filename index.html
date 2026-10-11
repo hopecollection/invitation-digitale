@@ -1725,34 +1725,96 @@ if (rsvpForm) {
 }
 
 
+
 const guestbookForm = document.getElementById("guestbookForm");
 
 if (guestbookForm) {
-    guestbookForm.addEventListener("submit", function(event) {
-
+    guestbookForm.addEventListener("submit", async function(event) {
         event.preventDefault();
 
-        const name = document.getElementById("guestName").value;
-        const message = document.getElementById("guestMessage").value;
-
+        const messageInput = document.getElementById("guestMessage");
         const messageContainer = document.getElementById("guestbookMessages");
+        const submitButton = guestbookForm.querySelector('button[type="submit"]');
 
-        if (messageContainer) {
-            const newMessage = document.createElement("div");
+        const message = messageInput.value.trim();
 
-            newMessage.className = "guest-message";
+        if (!message) {
+            return;
+        }
 
-            newMessage.innerHTML = `
-                <strong>${name}</strong>
-                <p>${message}</p>
-            `;
+        if (!invite || !invite.guest_id) {
+            console.error("Invité non identifié.");
+            alert("Impossible d'identifier votre invitation. Rechargez la page.");
+            return;
+        }
 
-            messageContainer.prepend(newMessage);
+        submitButton.disabled = true;
+        submitButton.textContent = "Envoi en cours...";
+
+        const { error } = await supabaseClient.rpc(
+            "submit_guestbook_message",
+            {
+                p_invitation_slug: invitationSlug,
+                p_guest_slug: guestSlug,
+                p_public_code: publicCode,
+                p_message: message
+            }
+        );
+
+        if (error) {
+            console.error("Erreur lors de l'envoi du message :", error);
+            alert("Le message n'a pas pu être envoyé. Veuillez réessayer.");
+            submitButton.disabled = false;
+            submitButton.textContent = "💌 Envoyer mon message";
+            return;
         }
 
         guestbookForm.reset();
+        submitButton.disabled = false;
+        submitButton.textContent = "💌 Envoyer mon message";
+
+        await chargerMessagesLivreOr();
     });
 }
+
+async function chargerMessagesLivreOr() {
+    const messageContainer = document.getElementById("guestbookMessages");
+
+    if (!messageContainer) {
+        return;
+    }
+
+    const { data, error } = await supabaseClient.rpc(
+        "get_published_guestbook",
+        {
+            p_invitation_slug: invitationSlug
+        }
+    );
+
+    if (error) {
+        console.error("Erreur lors du chargement du livre d'or :", error);
+        return;
+    }
+
+    messageContainer.replaceChildren();
+
+    (data || []).forEach(function(item) {
+        const messageElement = document.createElement("div");
+        messageElement.className = "guest-message";
+
+        const author = document.createElement("strong");
+        author.textContent = item.guest_name || "Invité";
+
+        const text = document.createElement("p");
+        text.textContent = item.message;
+
+        messageElement.append(author, text);
+        messageContainer.appendChild(messageElement);
+    });
+}
+
+chargerMessagesLivreOr();
+
         
     </script>
 
