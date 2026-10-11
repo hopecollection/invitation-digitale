@@ -1796,6 +1796,8 @@ async function chargerMessagesLivreOr() {
         return;
     }
 
+    console.log("Messages du livre d'or récupérés :", data);
+
     messageContainer.replaceChildren();
 
     (data || []).forEach(function(item) {
