@@ -1382,73 +1382,89 @@
     <h2>Confirmez votre présence</h2>
     <p>Nous serions heureux de vous compter parmi nous.</p>
 
-    <form id="rsvpForm">
+```html
+<form id="rsvpForm">
 
-        <div class="form-group">
-            <label for="nom">Nom et prénom</label>
-            <input 
-                type="text" 
-                id="nom" 
-                name="nom" 
-                placeholder="Ex. Jean Mukendi"
-                required
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="telephone">Numéro de téléphone</label>
-            <input 
-                type="tel" 
-                id="telephone" 
-                name="telephone" 
-                placeholder="+243 ..."
-                required
-            >
-        </div>
-
-        <div class="form-group">
-            <label>Confirmez votre présence</label>
-
-            <div class="radio-group">
-                <label>
-                    <input 
-                        type="radio" 
-                        name="presence" 
-                        value="present"
-                        required
-                    >
-                    Je serai présent(e)
-                </label>
-
-                <label>
-                    <input 
-                        type="radio" 
-                        name="presence" 
-                        value="absent"
-                    >
-                    Je ne pourrai pas venir
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="nombre">Nombre de personnes</label>
-
-            <select id="nombre" name="nombre" required>
-                <option value="">Sélectionnez</option>
-                <option value="1">1 personne</option>
-                <option value="2">2 personnes</option>
-            </select>
+    <div class="form-group">
+        <label for="nom">Nom et prénom</label>
+        <input
+            type="text"
+            id="nom"
+            name="nom"
+            placeholder="Ex. Jean Mukendi"
+            required
+        >
     </div>
 
-        <button type="submit" class="rsvp-button">
-            💌 Confirmer ma présence
-        </button>
+    <div class="form-group">
+        <label for="telephone">Numéro de téléphone</label>
+        <input
+            type="tel"
+            id="telephone"
+            name="telephone"
+            placeholder="+243 ..."
+            required
+        >
+    </div>
 
-        <div id="rsvpMessage"></div>
+    <div class="form-group">
+        <label>Confirmez votre présence</label>
 
-    </form>
-            
+        <div class="radio-group">
+            <label>
+                <input
+                    type="radio"
+                    name="presence"
+                    value="present"
+                    required
+                >
+                Je serai présent(e)
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="presence"
+                    value="absent"
+                >
+                Je ne pourrai pas venir
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="nombre">Nombre de personnes</label>
+
+        <select id="nombre" name="nombre" required>
+            <option value="">Sélectionnez</option>
+            <option value="1">1 personne</option>
+            <option value="2">2 personnes</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="boisson">Choix de boisson</label>
+
+        <select id="boisson" name="boisson">
+            <option value="">Sélectionnez votre boisson</option>
+            <option value="jus">Jus</option>
+            <option value="eau">Eau</option>
+            <option value="vin">Vin</option>
+            <option value="champagne">Champagne</option>
+            <option value="autre">Autre</option>
+        </select>
+    </div>
+
+    <button type="submit" class="rsvp-button">
+        💌 Confirmer ma présence
+    </button>
+
+    <div id="rsvpMessage"></div>
+
+</form>
+
+</section>
+
 <section class="guestbook" id="livre-or">
 
     <h2>Un mot pour les mariés</h2>
@@ -1490,43 +1506,8 @@
 
     <div id="guestbookMessages"></div>
 
-</section>
-            
-        </div>
-
-        <div class="form-group">
-            <label for="boisson">Choix de boisson</label>
-
-            <select id="boisson" name="boisson">
-                <option value="">Sélectionnez</option>
-                <option value="jus">Jus</option>
-                <option value="eau">Eau</option>
-                <option value="vin">Vin</option>
-                <option value="champagne">Champagne</option>
-                <option value="autre">Autre</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="message">Un petit mot pour les mariés</label>
-
-            <textarea 
-                id="message" 
-                name="message" 
-                rows="4"
-                placeholder="Écrivez votre message..."
-            ></textarea>
-        </div>
-
-        <button type="submit" class="rsvp-button">
-            Confirmer ma présence
-        </button>
-
-    </form>
-
-    <div id="rsvpMessage"></div>
-</section>
-
+</section>```
+        
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
     <span class="close">&times;</span>
     <img id="lightbox-image" src="" alt="Photo agrandie">
