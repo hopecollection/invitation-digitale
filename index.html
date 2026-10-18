@@ -59,7 +59,7 @@
                     rgba(20, 15, 10, 0.38),
                     rgba(20, 15, 10, 0.60)
                 ),
-                url("images/couple-principale.jpg");
+                var(--cover-photo, url("/invitation-digitale/images/couple-principale.jpg"));
 
             background-size: cover;
             background-position: center;
@@ -73,7 +73,7 @@
             inset: 0;
 
             background-image:
-                url("images/couple-principale.jpg");
+                var(--cover-photo, url("/invitation-digitale/images/couple-principale.jpg"));
 
             background-size: cover;
             background-position: center;
@@ -1153,7 +1153,7 @@
 
             <!-- COMPTE À REBOURS -->
 
-            <div class="countdown">
+            <div class="countdown" hidden>
 
                 <h3 class="countdown-title">
                     Le grand jour approche...
@@ -1742,6 +1742,23 @@ if (savedPath) {
 }
 
 // Récupérer les informations de l'invité depuis l'URL
+function configurerPhotosCouple(slug) {
+    const legacyCouple = slug === "epaphras-consolate";
+    const folder = legacyCouple
+        ? "/invitation-digitale/images/"
+        : "/invitation-digitale/images/" + (slug || "yannick-nadege") + "/";
+    const mainPhoto = folder + "couple-principale.jpg";
+    document.documentElement.style.setProperty("--cover-photo", 'url("' + mainPhoto + '")');
+
+    const storyPhoto = document.querySelector(".story-photo img");
+    if (storyPhoto) storyPhoto.src = folder + "couple-02.jpg";
+
+    const galleryPhotos = ["couple-principale.jpg", "couple-02.jpg", "couple-03.jpg", "couple-04.jpg", "couple-05.jpg"];
+    document.querySelectorAll(".gallery-grid img").forEach((img, index) => {
+        if (galleryPhotos[index]) img.src = folder + galleryPhotos[index];
+    });
+}
+
 const currentPath = window.location.pathname;
 
 const pathParts = currentPath
@@ -1758,6 +1775,7 @@ const guestIdentifier = pathParts.length >= 3 ? pathParts[2] : null;
 const guestParts = guestIdentifier ? guestIdentifier.split("-") : [];
 const publicCode = guestParts.length ? guestParts.pop() : null;
 const guestSlug = guestParts.join("-");
+configurerPhotosCouple(invitationSlug || "yannick-nadege");
 
 console.log("Invitation :", invitationSlug);
 console.log("Invité :", guestIdentifier);
