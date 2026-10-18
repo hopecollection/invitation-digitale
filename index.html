@@ -1796,6 +1796,7 @@ function appliquerDonneesInvitation(inviteData) {
     const formattedDate = weddingDate
         ? new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
             .format(new Date(weddingDate + "T12:00:00"))
+            .replace(/^./, letter => letter.toLocaleUpperCase("fr-FR"))
         : "Date à définir";
 
     document.getElementById("coupleNameOne").textContent = firstName;
