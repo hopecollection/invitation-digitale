@@ -1284,7 +1284,7 @@
                     </h3>
 
 
-                    <p class="event-time">
+                    <p class="event-time" id="ceremonyTime">
                         10h00
                     </p>
 
@@ -1331,7 +1331,7 @@
                     </h3>
 
 
-                    <p class="event-time">
+                    <p class="event-time" id="receptionTime">
                         19h00
                     </p>
 
@@ -1747,6 +1747,9 @@ function configurerPhotosCouple(slug) {
     const folder = legacyCouple
         ? "/invitation-digitale/images/"
         : "/invitation-digitale/images/" + (slug || "yannick-nadege") + "/";
+    // Conserver l'horaire historique de l'invitation Epaphras & Consolate.
+    const ceremonyTime = document.getElementById("ceremonyTime");
+    if (ceremonyTime) ceremonyTime.textContent = legacyCouple ? "14h00" : "10h00";
     const mainPhoto = folder + "couple-principale.jpg";
     document.documentElement.style.setProperty("--cover-photo", 'url("' + mainPhoto + '")');
 
