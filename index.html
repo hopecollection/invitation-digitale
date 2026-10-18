@@ -1074,7 +1074,7 @@
 
 
             <p class="date" id="weddingDateLabel">
-                Date à définir
+                Samedi 31 octobre 2026
             </p>
 
 
@@ -1147,13 +1147,13 @@
 
 
             <p class="story-date" id="storyDateLabel">
-                Notre grand jour — Date à définir
+                Notre grand jour — Samedi 31 octobre 2026
             </p>
 
 
             <!-- COMPTE À REBOURS -->
 
-            <div class="countdown" hidden>
+            <div class="countdown">
 
                 <h3 class="countdown-title">
                     Le grand jour approche...
@@ -1285,7 +1285,7 @@
 
 
                     <p class="event-time">
-                        14h00
+                        10h00
                     </p>
 
 
@@ -1546,7 +1546,7 @@
            COMPTE À REBOURS
         ===================================================== */
 
-        let dateMariage = null;
+        let dateMariage = new Date("2026-10-31T00:00:00").getTime();
 
 
         function actualiserCompteARebours() {
@@ -1791,7 +1791,7 @@ function appliquerDonneesInvitation(inviteData) {
     const secondName = (coupleParts[1] || "").trim();
     const weddingDate = inviteData.wedding_date || null;
     const formattedDate = weddingDate
-        ? new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" })
+        ? new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
             .format(new Date(weddingDate + "T12:00:00"))
         : "Date à définir";
 
