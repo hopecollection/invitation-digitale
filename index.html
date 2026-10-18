@@ -7,11 +7,11 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Epaphras & Consolate — 06 Juin 2027</title>
+    <title>Yannick &amp; Nadège — Invitation de mariage</title>
 
     <meta
         name="description"
-        content="Invitation au mariage de Epaphras & Consolate"
+        content="Invitation au mariage de Yannick et Nadège"
     >
 
     <style>
@@ -1060,21 +1060,21 @@
             </p>
 
 
-            <h1 class="names">
+            <h1 class="names" id="coupleNamesHeading">
 
-                Epaphras
+                <span id="coupleNameOne">Yannick</span>
 
                 <span class="ampersand">
                     &amp;
                 </span>
 
-                Consolate
+                <span id="coupleNameTwo">Nadège</span>
 
             </h1>
 
 
-            <p class="date">
-                06 Juin 2027
+            <p class="date" id="weddingDateLabel">
+                Date à définir
             </p>
 
 
@@ -1124,7 +1124,7 @@
 
                 <img
                     src="images/couple-02.jpg"
-                    alt="Epaphras et Consolate"
+                    alt="Yannick et Nadège"
                 >
 
             </div>
@@ -1146,8 +1146,8 @@
             </p>
 
 
-            <p class="story-date">
-                Notre grand jour — 06 Juin 2027
+            <p class="story-date" id="storyDateLabel">
+                Notre grand jour — Date à définir
             </p>
 
 
@@ -1370,11 +1370,11 @@
     <p>Des instants précieux de notre histoire</p>
 
     <div class="gallery-grid">
-        <img src="images/couple-principale.jpg" alt="Epaphras et Consolate" onclick="openLightbox(this)">
-        <img src="images/couple-02.jpg" alt="Epaphras et Consolate" onclick="openLightbox(this)">
-        <img src="images/couple-03.jpg" alt="Epaphras et Consolate" onclick="openLightbox(this)">
-        <img src="images/couple-04.jpg" alt="Epaphras et Consolate" onclick="openLightbox(this)">
-        <img src="images/couple-05.jpg" alt="Epaphras et Consolate" onclick="openLightbox(this)">
+        <img src="images/couple-principale.jpg" alt="Yannick et Nadège" onclick="openLightbox(this)">
+        <img src="images/couple-02.jpg" alt="Yannick et Nadège" onclick="openLightbox(this)">
+        <img src="images/couple-03.jpg" alt="Yannick et Nadège" onclick="openLightbox(this)">
+        <img src="images/couple-04.jpg" alt="Yannick et Nadège" onclick="openLightbox(this)">
+        <img src="images/couple-05.jpg" alt="Yannick et Nadège" onclick="openLightbox(this)">
     </div>
 </section>
 
@@ -1546,13 +1546,12 @@
            COMPTE À REBOURS
         ===================================================== */
 
-        const dateMariage =
-            new Date(
-                "June 6, 2027 00:00:00"
-            ).getTime();
+        let dateMariage = null;
 
 
         function actualiserCompteARebours() {
+
+            if (!dateMariage) return;
 
             const maintenant =
                 new Date().getTime();
@@ -1663,8 +1662,13 @@ if (rsvpForm) {
 
         const rsvpMessage = document.getElementById("rsvpMessage");
 
-        // Vérifier que l'invité a bien été chargé
+        // Le formulaire n'enregistre des réponses que depuis un lien individuel.
+        if (!invitationSlug || !guestSlug || !publicCode) {
+            if (rsvpMessage) rsvpMessage.textContent = "Aperçu du modèle : les confirmations seront activées sur le lien individuel de chaque invité.";
+            return;
+        }
         if (!invite || !invite.guest_id) {
+            if (rsvpMessage) rsvpMessage.textContent = "Le lien de cette invitation n'a pas pu être vérifié. Veuillez réessayer avec votre lien personnel.";
             console.error("Invité non identifié.");
             return;
         }
@@ -1747,21 +1751,49 @@ const pathParts = currentPath
 console.log("URL de l'invitation :", currentPath);
 console.log("Éléments de l'URL :", pathParts);
 
-// Identifier l'invitation et l'invité depuis l'URL
-const invitationSlug = pathParts[1];
-const guestIdentifier = pathParts[2];
+// Une URL de base affiche le template de démonstration.
+// Les données réelles ne sont chargées que sur un lien individuel d'invité.
+const invitationSlug = pathParts.length >= 3 ? pathParts[1] : null;
+const guestIdentifier = pathParts.length >= 3 ? pathParts[2] : null;
+const guestParts = guestIdentifier ? guestIdentifier.split("-") : [];
+const publicCode = guestParts.length ? guestParts.pop() : null;
+const guestSlug = guestParts.join("-");
 
 console.log("Invitation :", invitationSlug);
 console.log("Invité :", guestIdentifier);
 
-// Séparer le nom de l'invité et son code
-const guestParts = guestIdentifier.split("-");
-
-const publicCode = guestParts.pop();
-const guestSlug = guestParts.join("-");
-
 console.log("Slug de l'invité :", guestSlug);
 console.log("Code de l'invité :", publicCode);
+
+// Met à jour les éléments propres au couple sans modifier le design du modèle.
+function appliquerDonneesInvitation(inviteData) {
+    const coupleNames = String(inviteData.couple_names || "Yannick & Nadège");
+    const coupleParts = coupleNames.split(/\s*(?:&|\bet\b)\s*/i);
+    const firstName = (coupleParts[0] || coupleNames).trim();
+    const secondName = (coupleParts[1] || "").trim();
+    const weddingDate = inviteData.wedding_date || null;
+    const formattedDate = weddingDate
+        ? new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" })
+            .format(new Date(weddingDate + "T12:00:00"))
+        : "Date à définir";
+
+    document.getElementById("coupleNameOne").textContent = firstName;
+    document.getElementById("coupleNameTwo").textContent = secondName;
+    document.getElementById("weddingDateLabel").textContent = formattedDate;
+    document.getElementById("storyDateLabel").textContent = "Notre grand jour — " + formattedDate;
+    document.title = coupleNames + " — " + formattedDate;
+
+    const description = document.querySelector('meta[name="description"]');
+    if (description) description.content = "Invitation au mariage de " + coupleNames;
+    document.querySelectorAll(".story-photo img, .gallery-grid img").forEach(img => {
+        img.alt = coupleNames.replace(/\s*&\s*/, " et ");
+    });
+
+    dateMariage = weddingDate ? new Date(weddingDate + "T00:00:00").getTime() : null;
+    const countdown = document.querySelector(".countdown");
+    if (countdown) countdown.hidden = !dateMariage;
+    actualiserCompteARebours();
+}
 
 // Récupérer les informations de l'invité depuis Supabase
 async function chargerInvite() {
@@ -1780,9 +1812,10 @@ async function chargerInvite() {
     }
 
     console.log("Informations de l'invité :", data);
-    invite = data[0];
+    invite = data?.[0] || null;
 
 if (invite) {
+    appliquerDonneesInvitation(invite);
     const nomInput = document.getElementById("nom");
 
     if (nomInput) {
@@ -1806,7 +1839,11 @@ console.log("Nombre de personnes autorisées :", invite.allowed_guests);
 }
 }
 
-chargerInvite();
+if (invitationSlug && guestIdentifier && guestSlug && publicCode) {
+    chargerInvite();
+} else {
+    console.info("Mode aperçu du template : aucun lien individuel chargé.");
+}
 </script>
 
 <script>
@@ -1821,6 +1858,11 @@ if (guestbookForm) {
         const submitButton = guestbookForm.querySelector('button[type="submit"]');
 
         const message = messageInput.value.trim();
+
+        if (!invitationSlug || !guestSlug || !publicCode || !invite?.guest_id) {
+            messageContainer.textContent = "Aperçu du modèle : le livre d’or sera activé sur le lien individuel de chaque invité.";
+            return;
+        }
 
         if (!message) {
             return;
